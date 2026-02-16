@@ -49,10 +49,8 @@ public class HibernateUtil {
      * @return
      */
     public static Session getCurrentSession() {
-
         if ((session == null) || (!session.isOpen()))
             openSession();
-
         return session;
     }
 
@@ -60,10 +58,8 @@ public class HibernateUtil {
      * Cierra Hibernate
      */
     public static void closeSessionFactory() {
-
         if (session != null)
             session.close();
-
         if (sessionFactory != null)
             sessionFactory.close();
     }

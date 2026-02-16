@@ -1094,6 +1094,8 @@
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:d:grow"/>
             <colspec value="fill:137px:noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
             <colspec value="fill:350px:noGrow"/>
@@ -1245,6 +1247,20 @@
                   <text value="Refrescar"/>
                 </properties>
               </component>
+              <scrollpane id="9ded5">
+                <constraints>
+                  <grid row="14" column="2" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="380a1" class="javax.swing.JTable" binding="tableVentaProducto">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="9960e" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

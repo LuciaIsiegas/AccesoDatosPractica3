@@ -108,6 +108,7 @@ public class Vista extends JFrame {
     JTable tableVentaEmpleado;
     JTable tableVentaCliente;
     JTable tableProductoProveedor;
+    JTable tableVentaProducto;
 
     DefaultTableModel dtmProducto;
     DefaultTableModel dtmEmpleado;
@@ -117,6 +118,7 @@ public class Vista extends JFrame {
     DefaultTableModel dtmVentaEmpleado;
     DefaultTableModel dtmVentaCliente;
     DefaultTableModel dtmProductoProveedor;
+    DefaultTableModel dtmVentaProducto;
 
     //menubar
     JMenuItem itemDesconectar;
@@ -252,6 +254,13 @@ public class Vista extends JFrame {
             }
         };
         tableProductoProveedor.setModel(dtmProductoProveedor);
+        dtmVentaProducto = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableVentaProducto.setModel(dtmVentaProducto);
     }
 
     private void botonesVisibles() {
