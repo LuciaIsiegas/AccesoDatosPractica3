@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.luciaia.heladeriamvc.gui.Vista">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.luciaia.heladeria.mvc.Vista">
   <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="FormLayout">
     <rowspec value="center:d:grow"/>
     <colspec value="fill:d:grow"/>
@@ -268,7 +268,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="e96f" class="com.github.lgooddatepicker.components.DatePicker" binding="dateCaducidad">
+              <component id="7cb84" class="com.github.lgooddatepicker.components.DatePicker" binding="dateCaducidad">
                 <constraints>
                   <grid row="6" column="2" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
@@ -277,7 +277,7 @@
                   <background color="-133687"/>
                 </properties>
               </component>
-              <component id="4db88" class="com.github.lgooddatepicker.components.DatePicker" binding="dateApertura">
+              <component id="cf04e" class="com.github.lgooddatepicker.components.DatePicker" binding="dateApertura">
                 <constraints>
                   <grid row="8" column="2" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                   <forms/>
@@ -343,6 +343,8 @@
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:d:grow"/>
             <colspec value="fill:137px:noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
             <colspec value="fill:130px:noGrow"/>
@@ -551,6 +553,20 @@
                   </component>
                 </children>
               </scrollpane>
+              <scrollpane id="a947e">
+                <constraints>
+                  <grid row="18" column="2" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="f3675" class="javax.swing.JTable" binding="tableVentaEmpleado">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="3191a" binding="JPanelCliente" layout-manager="FormLayout">
@@ -571,6 +587,8 @@
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:d:grow"/>
             <colspec value="fill:137px:noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
             <colspec value="fill:130px:noGrow"/>
@@ -780,6 +798,20 @@
                   </component>
                 </children>
               </scrollpane>
+              <scrollpane id="a0cf1">
+                <constraints>
+                  <grid row="18" column="2" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="48778" class="javax.swing.JTable" binding="tableVentaCliente">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="8e16b" binding="JPanelProveedor" layout-manager="FormLayout">
@@ -802,6 +834,8 @@
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:d:grow"/>
             <colspec value="fill:137px:noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
             <colspec value="fill:130px:noGrow"/>
@@ -1030,6 +1064,20 @@
                   </component>
                 </children>
               </scrollpane>
+              <scrollpane id="88d41">
+                <constraints>
+                  <grid row="20" column="2" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="43a1a" class="javax.swing.JTable" binding="tableProductoProveedor">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="c9ced" binding="JPanelVenta" layout-manager="FormLayout">
@@ -1197,6 +1245,32 @@
                   <text value="Refrescar"/>
                 </properties>
               </component>
+            </children>
+          </grid>
+          <grid id="9960e" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <tabbedpane title="Untitled"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="e7096" class="com.github.lgooddatepicker.components.DatePicker">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+              </component>
+              <hspacer id="d58cf">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <vspacer id="509c7">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
             </children>
           </grid>
         </children>

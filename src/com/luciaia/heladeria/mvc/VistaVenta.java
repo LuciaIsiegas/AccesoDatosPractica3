@@ -1,4 +1,4 @@
-package com.luciaia.heladeriamvc.gui;
+package com.luciaia.heladeria.mvc;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

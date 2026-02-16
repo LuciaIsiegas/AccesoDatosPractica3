@@ -1,9 +1,9 @@
-package com.luciaia.heladeriamvc.gui;
+package com.luciaia.heladeria.mvc;
 
 import com.github.lgooddatepicker.components.DatePicker;
-import com.luciaia.heladeriamvc.gui.base.SaborHelado;
-import com.luciaia.heladeriamvc.gui.base.TipoMasa;
-import com.luciaia.heladeriamvc.gui.base.Topping;
+import com.luciaia.heladeria.base.enums.SaborHelado;
+import com.luciaia.heladeria.base.enums.TipoMasa;
+import com.luciaia.heladeria.base.enums.Topping;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -97,6 +97,7 @@ public class Vista extends JFrame {
     JButton btnBuscarProveedor;
     JButton btnBuscarVentaEmpleado;
     JButton btnBuscarVentaCliente;
+    JButton btnRefrescarVenta;
 
     // tablas
     JTable tableProducto;
@@ -104,24 +105,22 @@ public class Vista extends JFrame {
     JTable tableCliente;
     JTable tableProveedor;
     JTable tableVenta;
-    JButton btnRefrescarVenta;
+    JTable tableVentaEmpleado;
+    JTable tableVentaCliente;
+    JTable tableProductoProveedor;
 
     DefaultTableModel dtmProducto;
     DefaultTableModel dtmEmpleado;
     DefaultTableModel dtmCliente;
     DefaultTableModel dtmProveedor;
     DefaultTableModel dtmVenta;
+    DefaultTableModel dtmVentaEmpleado;
+    DefaultTableModel dtmVentaCliente;
+    DefaultTableModel dtmProductoProveedor;
 
     //menubar
-    JMenuItem itemOpciones;
     JMenuItem itemDesconectar;
     JMenuItem itemSalir;
-
-    //cuadro dialogo
-    OptionDialog optionDialog;
-    JDialog adminPasswordDialog;
-    JButton btnValidate;
-    JPasswordField adminPassword;
 
 
     public Vista() {
@@ -137,7 +136,6 @@ public class Vista extends JFrame {
         );
 
         setIconImage(icono);
-
         radioHelado.setSelected(true);
         crearPanelCard();
         botonesVisibles();
@@ -145,21 +143,12 @@ public class Vista extends JFrame {
         CardLayout cl = (CardLayout) (panelCard.getLayout());
         cl.show(panelCard, "Helado");
 
-        //creo cuadro dialogo
-        optionDialog = new OptionDialog(this);
-
         //llamo menu
         setMenu();
-
-        //llamo cuadro dialogo admin
-        setAdminDialog();
-
         //cargo enumerados
         setEnumComboBox();
-
         //cargo table models
         setTableModels();
-
         pack();
         setVisible(true);
         setLocationRelativeTo(null);
@@ -168,41 +157,20 @@ public class Vista extends JFrame {
     private void setMenu() {
         JMenuBar mbBar = new JMenuBar();
         JMenu menu = new JMenu("Archivo");
-        itemOpciones = new JMenuItem("Opciones");
-        itemOpciones.setActionCommand("Opciones");
         itemDesconectar = new JMenuItem("Desconectar");
         itemDesconectar.setActionCommand("Desconectar");
         itemSalir = new JMenuItem("Salir");
         itemSalir.setActionCommand("Salir");
 
         mbBar.setBackground(new Color(255, 203, 133));
-        itemOpciones.setBackground(new Color(255, 203, 133));
         itemDesconectar.setBackground(new Color(255, 203, 133));
         itemSalir.setBackground(new Color(255, 203, 133));
 
-        menu.add(itemOpciones);
         menu.add(itemDesconectar);
         menu.add(itemSalir);
         mbBar.add(menu);
         mbBar.add(Box.createHorizontalGlue());
         this.setJMenuBar(mbBar);
-    }
-
-    private void setAdminDialog() {
-        btnValidate = new JButton("Validar");
-        btnValidate.setActionCommand("abrirOpciones");
-        adminPassword = new JPasswordField();
-
-        //dimension al cuadro de texto
-        adminPassword.setPreferredSize(new Dimension(100, 26));
-        Object[] options = new Object[]{adminPassword, btnValidate};
-        JOptionPane jop = new JOptionPane("Introduce la contraseña", JOptionPane.WARNING_MESSAGE,
-                JOptionPane.YES_NO_OPTION, null, options);
-        adminPasswordDialog = new JDialog(this, "Opciones", true);
-        adminPasswordDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        adminPasswordDialog.setContentPane(jop);
-        adminPasswordDialog.pack();
-        adminPasswordDialog.setLocationRelativeTo(this);
     }
 
     private void setEnumComboBox() {
@@ -263,6 +231,27 @@ public class Vista extends JFrame {
             }
         };
         tableVenta.setModel(dtmVenta);
+        dtmVentaEmpleado = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableVentaEmpleado.setModel(dtmVentaEmpleado);
+        dtmVentaCliente = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableVentaCliente.setModel(dtmVentaCliente);
+        dtmProductoProveedor = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tableProductoProveedor.setModel(dtmProductoProveedor);
     }
 
     private void botonesVisibles() {
