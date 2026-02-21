@@ -161,6 +161,7 @@ public class Modelo {
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idProveedor);
         query.execute();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
     }
 
     /***
@@ -172,6 +173,7 @@ public class Modelo {
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idEmpleado);
         query.execute();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
     }
 
     /***
@@ -183,6 +185,7 @@ public class Modelo {
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idCliente);
         query.execute();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
     }
 
     /***
@@ -205,6 +208,7 @@ public class Modelo {
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idVentaProducto);
         query.execute();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
     }
 
     /***
@@ -216,6 +220,7 @@ public class Modelo {
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idVenta);
         query.execute();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
     }
 
     /***
@@ -230,91 +235,114 @@ public class Modelo {
     /////////////////////////////////////////////////////////////////
 
 
-    // ELIMINAR
+    // LIMPIAR
     /***
-     * Eliminar un objeto en la BBDD
-     * @param object objeto a eliminar en la BBDD
+     * Limpiar la BBDD de proveedor
      */
-    public void delete(Object object) {
-        HibernateUtil.getCurrentSession().beginTransaction();
-        HibernateUtil.getCurrentSession().delete(object);
+    public void limpiarBBDDProveedor() {
+        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarProveedor");
+        query.execute();
         HibernateUtil.getCurrentSession().getTransaction().commit();
     }
 
     /***
-     * Eliminar un proveedor en la BBDD
-     * @param idProveedor proveedor a eliminar en la BBDD
+     * Limpiar la BBDD de empleado
      */
-    public void deleteProveedor(int idProveedor) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarProveedor");
-        query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
-        query.setParameter(1, idProveedor);
+    public void limpiarBBDDEmpleado() {
+        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarEmpleado");
         query.execute();
-    }
-
-    /***
-     * Eliminar un empleado en la BBDD
-     * @param idEmpleado empleado a eliminar en la BBDD
-     */
-    public void deleteEmpleado(int idEmpleado) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarEmpleado");
-        query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
-        query.setParameter(1, idEmpleado);
-        query.execute();
-    }
-
-    /***
-     * Eliminar un cliente en la BBDD
-     * @param idCliente cliente a eliminar en la BBDD
-     */
-    public void deleteCliente(int idCliente) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarCliente");
-        query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
-        query.setParameter(1, idCliente);
-        query.execute();
-    }
-
-    /***
-     * Eliminar un helado en la BBDD
-     * @param idHelado helado a eliminar en la BBDD
-     */
-    public void deleteHelado(int idHelado) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarHelado");
-        query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
-        query.setParameter(1, idHelado);
-        query.execute();
-    }
-
-    /***
-     * Eliminar una ventaProducto en la BBDD
-     * @param idVentaProducto ventaProducto a eliminar en la BBDD
-     */
-    public void deleteVentaProducto(int idVentaProducto) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarVentaProducto");
-        query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
-        query.setParameter(1, idVentaProducto);
-        query.execute();
-    }
-
-    /***
-     * Eliminar una venta en la BBDD
-     * @param idVenta venta a eliminar en la BBDD
-     */
-    public void deleteVenta(int idVenta) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarVenta");
-        query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
-        query.setParameter(1, idVenta);
-        query.execute();
-    }
-
-    /***
-     * Eliminar todos los objetos en la BBDD
-     * @param claseEntidad clase a eliminar en la BBDD
-     */
-    public <T> void deleteAll(Class<T> claseEntidad) {
-        HibernateUtil.getCurrentSession().beginTransaction();
-        HibernateUtil.getCurrentSession().createQuery("DELETE FROM " + claseEntidad.getName()).executeUpdate();
         HibernateUtil.getCurrentSession().getTransaction().commit();
+    }
+
+    /***
+     * Limpiar la BBDD de cliente
+     */
+    public void limpiarBBDDCliente() {
+        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarCliente");
+        query.execute();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
+    }
+
+    /***
+     * Limpiar la BBDD de helado
+     */
+    public void limpiarBBDDHelado() {
+        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarHelado");
+        query.execute();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
+    }
+
+    /***
+     * Limpiar la BBDD de ventaProducto
+     */
+    public void limpiarBBDDVentaProducto() {
+        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarVentaProducto");
+        query.execute();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
+    }
+
+    /***
+     * Limpiar la BBDD de venta
+     */
+    public void limpiarBBDDVenta() {
+        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarVenta");
+        query.execute();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
+    }
+    /////////////////////////////////////////////////////////////////
+
+
+    // EXISTE
+    /***
+     * Comprobar si existe un proveedor
+     * @param nombreProveedor proveedor a buscar en la BBDD
+     */
+    public boolean proveedorExiste(String nombreProveedor) {
+        HibernateUtil.getCurrentSession().beginTransaction();
+        String hql = "SELECT count(p) FROM Proveedor p WHERE p.nombre = :nombre AND p.activo = true";
+        int count = HibernateUtil.getCurrentSession().createQuery(hql, Integer.class)
+                .setParameter("nombre", nombreProveedor)
+                .uniqueResult();
+        return count > 0;
+    }
+
+    /***
+     * Comprobar si existe un empleado
+     * @param emailEmpleado empleado a buscar en la BBDD
+     */
+    public boolean empleadoExiste(String emailEmpleado) {
+        HibernateUtil.getCurrentSession().beginTransaction();
+        String hql = "SELECT count(e) FROM Empleado e WHERE e.email = :email AND e.activo = true";
+        int count = HibernateUtil.getCurrentSession().createQuery(hql, Integer.class)
+                .setParameter("email", emailEmpleado)
+                .uniqueResult();
+        return count > 0;
+    }
+
+    /***
+     * Comprobar si existe un cliente
+     * @param emailCliente cliente a buscar en la BBDD
+     */
+    public boolean clienteExiste(String emailCliente) {
+        HibernateUtil.getCurrentSession().beginTransaction();
+        String hql = "SELECT count(c) FROM Cliente c WHERE c.email = :email AND c.activo = true";
+        int count = HibernateUtil.getCurrentSession().createQuery(hql, Integer.class)
+                .setParameter("email", emailCliente)
+                .uniqueResult();
+        return count > 0;
+    }
+
+    /***
+     * Comprobar si existe un helado
+     * @param nombreProducto helado a buscar en la BBDD
+     */
+    public boolean heladoExiste(String nombreProducto) {
+        HibernateUtil.getCurrentSession().beginTransaction();
+        String hql = "SELECT count(h) FROM Helado h WHERE h.nombre = :nombre AND h.activo = true";
+        int count = HibernateUtil.getCurrentSession().createQuery(hql, Integer.class)
+                .setParameter("nombre", nombreProducto)
+                .uniqueResult();
+        return count > 0;
     }
     /////////////////////////////////////////////////////////////////
 
