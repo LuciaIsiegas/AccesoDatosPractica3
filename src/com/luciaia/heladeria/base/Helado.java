@@ -13,7 +13,6 @@ public class Helado {
     private double precio;
     private Date fechaApertura;
     private Date fechaCaducidad;
-    private String tipo;
     private boolean activo;
     private String sabor;
     private boolean azucar;
@@ -72,16 +71,6 @@ public class Helado {
     }
 
     @Basic
-    @Column(name = "tipo")
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    @Basic
     @Column(name = "activo")
     public boolean isActivo() {
         return activo;
@@ -134,13 +123,12 @@ public class Helado {
                 Objects.equals(nombre, helado.nombre) &&
                 Objects.equals(fechaApertura, helado.fechaApertura) &&
                 Objects.equals(fechaCaducidad, helado.fechaCaducidad) &&
-                Objects.equals(tipo, helado.tipo) &&
                 Objects.equals(sabor, helado.sabor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, precio, fechaApertura, fechaCaducidad, tipo, activo, sabor, azucar, litros);
+        return Objects.hash(id, nombre, precio, fechaApertura, fechaCaducidad, activo, sabor, azucar, litros);
     }
 
     @ManyToOne
@@ -160,5 +148,12 @@ public class Helado {
 
     public void setVentasHelados(List<VentaProducto> ventasHelados) {
         this.ventasHelados = ventasHelados;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | Nombre: " + nombre + " | Precio: " + precio + " | Apertura: " + fechaApertura
+                + " | Caducidad: " + fechaCaducidad + " | Activo: " + activo + " | Sabor: " + sabor
+                + " | Azucar: " + azucar + " | Litros: " + litros + " | Proveedor: " + proveedor.getNombre();
     }
 }

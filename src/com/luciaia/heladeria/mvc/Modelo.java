@@ -1,89 +1,212 @@
 package com.luciaia.heladeria.mvc;
 
 import com.luciaia.heladeria.base.*;
-import com.luciaia.heladeria.util.HibernateUtil;
-import org.hibernate.query.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 import javax.persistence.ParameterMode;
+import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class Modelo {
+    SessionFactory sessionFactory;
+
     /***
      * Método conectar
      */
     public void conectar() {
+        ejecutarScript();
+        Configuration configuracion = new Configuration();
+        //Cargo el fichero Hibernate.cfg.xml
+        configuracion.configure("hibernate.cfg.xml");
+
+        //Indico la clase mapeada con anotaciones
+        configuracion.addAnnotatedClass(Cliente.class);
+        configuracion.addAnnotatedClass(Empleado.class);
+        configuracion.addAnnotatedClass(Helado.class);
+        configuracion.addAnnotatedClass(Proveedor.class);
+        configuracion.addAnnotatedClass(Venta.class);
+        configuracion.addAnnotatedClass(VentaProducto.class);
+
+        //Creamos un objeto ServiceRegistry a partir de los parámetros de configuración
+        //Esta clase se usa para gestionar y proveer de acceso a servicios
+        StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().applySettings(
+                configuracion.getProperties()).build();
+
+        //finalmente creamos un objeto sessionfactory a partir de la configuracion y del registro de servicios
+        sessionFactory = configuracion.buildSessionFactory(ssr);
+    }
+    /*
+    public void conectar() {
         HibernateUtil.buildSessionFactory();
         HibernateUtil.openSession();
+    }
+     */
+
+    private void ejecutarScript() {
+        Connection conexion = null;
+        try {
+            conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/heladeria_3", "root", "");
+        } catch (SQLException sqle) {
+            try {
+                // En caso de no tener la BBDD creada la crea por defecto
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "");
+
+                PreparedStatement statement = null;
+                String code = leerFichero();
+                String[] query = code.split("--");
+                for (String aQuery : query) {
+                    statement = conexion.prepareStatement(aQuery);
+                    statement.executeUpdate();
+                }
+                assert statement != null;
+                statement.close();
+
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String leerFichero() throws IOException {
+        // LIA
+        System.out.println(
+                Thread.currentThread()
+                        .getContextClassLoader()
+                        .getResource("scriptBBDD_Heladeria3.sql")
+        );
+
+        // Al utilizar Jar ya no existe como archivo físico, NO se puede utilizar FileReader
+        InputStream is = Thread.currentThread()
+                .getContextClassLoader()
+                .getResourceAsStream("scriptBBDD_Heladeria3.sql");
+        if (is == null) {
+            throw new RuntimeException("No se encuentra el script SQL en resources");
+        }
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        //BufferedReader reader = new BufferedReader(new FileReader("scriptBBDD-Heladeria.sql"));
+        String linea;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((linea = reader.readLine()) != null) {
+            stringBuilder.append(linea);
+            stringBuilder.append(" ");
+        }
+        return stringBuilder.toString();
     }
 
     /***
      * Método desconectar
      */
     public void desconectar() {
-        HibernateUtil.closeSessionFactory();
+        //Cierro la factoria de sessiones
+        if (sessionFactory != null && sessionFactory.isOpen())
+            sessionFactory.close();
     }
 
     // OBTENER
+
     /***
      * Devuelve los clientes
      * @return lista de clientes
      */
-    public List<Cliente> getClientesActivos() {
-        return HibernateUtil.getCurrentSession().createQuery("FROM Cliente WHERE activo", Cliente.class).getResultList();
+    public ArrayList<Cliente> getClientesActivos() {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM Cliente WHERE activo = true");
+        ArrayList<Cliente> listaClientes = (ArrayList<Cliente>) query.getResultList();
+        sesion.close();
+        return listaClientes;
     }
 
     /***
      * Devuelve los empleados
      * @return lista de empleados
      */
-    public List<Empleado> getEmpleadosActivos() {
-        return HibernateUtil.getCurrentSession().createQuery("FROM Empleado WHERE activo", Empleado.class).getResultList();
+    public ArrayList<Empleado> getEmpleadosActivos() {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM Empleado WHERE activo = true");
+        ArrayList<Empleado> lista = (ArrayList<Empleado>) query.getResultList();
+        sesion.close();
+        return lista;
     }
 
     /***
      * Devuelve los helados
      * @return lista de helados
      */
-    public List<Helado> getHeladosActivos() {
-        return HibernateUtil.getCurrentSession().createQuery("FROM Helado WHERE activo", Helado.class).getResultList();
+    public ArrayList<Helado> getHeladosActivos() {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM Helado WHERE activo = true");
+        ArrayList<Helado> lista = (ArrayList<Helado>) query.getResultList();
+        sesion.close();
+        return lista;
     }
 
     /***
      * Devuelve los proveedores
      * @return lista de proveedores
      */
-    public List<Proveedor> getProveedoresActivos() {
-        return HibernateUtil.getCurrentSession().createQuery("FROM Proveedor WHERE activo", Proveedor.class).getResultList();
+    public ArrayList<Proveedor> getProveedoresActivos() {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM Proveedor WHERE activo = true");
+        ArrayList<Proveedor> lista = (ArrayList<Proveedor>) query.getResultList();
+        sesion.close();
+        return lista;
     }
 
     /***
      * Devuelve los ventas
      * @return lista de ventas
      */
-    public List<Venta> getVentas() {
-        return HibernateUtil.getCurrentSession().createQuery("FROM Venta").getResultList();
+    public ArrayList<Venta> getVentas() {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM Venta");
+        ArrayList<Venta> lista = (ArrayList<Venta>) query.getResultList();
+        sesion.close();
+        return lista;
     }
 
     /***
      * Devuelve las líneas de venta
      * @return lista de líneas de venta
      */
-    public List<VentaProducto> getVentaProductos() {
-        return HibernateUtil.getCurrentSession().createQuery("FROM VentaProducto").getResultList();
+    public ArrayList<VentaProducto> getVentaProductos() {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM VentaProducto");
+        ArrayList<VentaProducto> lista = (ArrayList<VentaProducto>) query.getResultList();
+        sesion.close();
+        return lista;
     }
     /////////////////////////////////////////////////////////////////
 
 
     // OBTENER RELACIONADOS
+
     /***
      * Devuelve las ventas que tiene un empleado
      * @param empleado empleado
      * @return lista de ventas
      */
-    public List<Venta> getVentasEmpleado(Empleado empleado) {
-        return empleado.getVentas();
+    public ArrayList<Venta> getVentasEmpleado(Empleado empleado) {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM Venta WHERE empleado =: empleado");
+        query.setParameter("empleado", empleado);
+        ArrayList<Venta> lista = (ArrayList<Venta>) query.getResultList();
+        sesion.close();
+        return lista;
     }
 
     /***
@@ -91,8 +214,13 @@ public class Modelo {
      * @param cliente cliente
      * @return lista de ventas
      */
-    public List<Venta> getVentasCliente(Cliente cliente) {
-        return cliente.getCompras();
+    public ArrayList<Venta> getVentasCliente(Cliente cliente) {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM Venta WHERE cliente =: cliente");
+        query.setParameter("cliente", cliente);
+        ArrayList<Venta> lista = (ArrayList<Venta>) query.getResultList();
+        sesion.close();
+        return lista;
     }
 
     /***
@@ -100,8 +228,13 @@ public class Modelo {
      * @param venta venta
      * @return lista de lineas de ventas
      */
-    public List<VentaProducto> getLineasVentasVenta(Venta venta) {
-        return venta.getLineasVenta();
+    public ArrayList<VentaProducto> getLineasVentasVenta(Venta venta) {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM VentaProducto WHERE venta =: venta");
+        query.setParameter("venta", venta);
+        ArrayList<VentaProducto> lista = (ArrayList<VentaProducto>) query.getResultList();
+        sesion.close();
+        return lista;
     }
 
     /***
@@ -109,47 +242,62 @@ public class Modelo {
      * @param proveedor proveedor
      * @return lista de helados
      */
-    public List<Helado> getHeladosProveedor(Proveedor proveedor) {
-        return proveedor.getHelados();
+    public ArrayList<Helado> getHeladosProveedor(Proveedor proveedor) {
+        Session sesion = sessionFactory.openSession();
+        Query query = sesion.createQuery("FROM Helado WHERE proveedor =: proveedor");
+        query.setParameter("proveedor", proveedor);
+        ArrayList<Helado> lista = (ArrayList<Helado>) query.getResultList();
+        sesion.close();
+        return lista;
     }
     /////////////////////////////////////////////////////////////////
 
 
     // INSERTAR
+
     /***
      * Insertar un objeto en la BBDD
      * @param object objeto a insertar en la BBDD
      */
     public void insert(Object object) {
-        HibernateUtil.getCurrentSession().beginTransaction();
-        HibernateUtil.getCurrentSession().save(object);
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        //Obtengo una session a partir de la factoria de sesiones
+        Session sesion = sessionFactory.openSession();
+        sesion.beginTransaction();
+        sesion.save(object);
+        sesion.getTransaction().commit();
+        sesion.close();
     }
     /////////////////////////////////////////////////////////////////
 
 
     // MODIFICAR
+
     /***
      * Modificar un objeto en la BBDD
      * @param object objeto a modificar en la BBDD
      */
     public void update(Object object) {
-        HibernateUtil.getCurrentSession().beginTransaction();
-        HibernateUtil.getCurrentSession().saveOrUpdate(object);
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        Session sesion = sessionFactory.openSession();
+        sesion.beginTransaction();
+        sesion.saveOrUpdate(object);
+        sesion.getTransaction().commit();
+        sesion.close();
     }
     /////////////////////////////////////////////////////////////////
 
 
     // ELIMINAR
+
     /***
      * Eliminar un objeto en la BBDD
      * @param object objeto a eliminar en la BBDD
      */
     public void delete(Object object) {
-        HibernateUtil.getCurrentSession().beginTransaction();
-        HibernateUtil.getCurrentSession().delete(object);
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        Session sesion = sessionFactory.openSession();
+        sesion.beginTransaction();
+        sesion.delete(object);
+        sesion.getTransaction().commit();
+        sesion.close();
     }
 
     /***
@@ -157,11 +305,14 @@ public class Modelo {
      * @param idProveedor proveedor a eliminar en la BBDD
      */
     public void deleteProveedor(int idProveedor) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarProveedor");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureQuery("pEliminarProveedor");
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idProveedor);
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
@@ -169,11 +320,14 @@ public class Modelo {
      * @param idEmpleado empleado a eliminar en la BBDD
      */
     public void deleteEmpleado(int idEmpleado) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarEmpleado");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureQuery("pEliminarEmpleado");
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idEmpleado);
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
@@ -181,11 +335,14 @@ public class Modelo {
      * @param idCliente cliente a eliminar en la BBDD
      */
     public void deleteCliente(int idCliente) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarCliente");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureQuery("pEliminarCliente");
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idCliente);
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
@@ -193,10 +350,14 @@ public class Modelo {
      * @param idHelado helado a eliminar en la BBDD
      */
     public void deleteHelado(int idHelado) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarHelado");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureQuery("pEliminarHelado");
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idHelado);
         query.execute();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
@@ -204,11 +365,14 @@ public class Modelo {
      * @param idVentaProducto ventaProducto a eliminar en la BBDD
      */
     public void deleteVentaProducto(int idVentaProducto) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarVentaProducto");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureQuery("pEliminarVentaProducto");
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idVentaProducto);
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
@@ -216,11 +380,14 @@ public class Modelo {
      * @param idVenta venta a eliminar en la BBDD
      */
     public void deleteVenta(int idVenta) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pEliminarVenta");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureQuery("pEliminarVenta");
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idVenta);
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
@@ -228,82 +395,106 @@ public class Modelo {
      * @param claseEntidad clase a eliminar en la BBDD
      */
     public <T> void deleteAll(Class<T> claseEntidad) {
-        HibernateUtil.getCurrentSession().beginTransaction();
-        HibernateUtil.getCurrentSession().createQuery("DELETE FROM " + claseEntidad.getName()).executeUpdate();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        Session sesion = sessionFactory.openSession();
+        sesion.beginTransaction();
+        sesion.createQuery("DELETE FROM " + claseEntidad.getName()).executeUpdate();
+        sesion.getTransaction().commit();
+        sesion.close();
     }
     /////////////////////////////////////////////////////////////////
 
 
     // LIMPIAR
+
     /***
      * Limpiar la BBDD de proveedor
      */
     public void limpiarBBDDProveedor() {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarProveedor");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureCall("pLimpiarProveedor");
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
      * Limpiar la BBDD de empleado
      */
     public void limpiarBBDDEmpleado() {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarEmpleado");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureCall("pLimpiarEmpleado");
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
      * Limpiar la BBDD de cliente
      */
     public void limpiarBBDDCliente() {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarCliente");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureCall("pLimpiarCliente");
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
      * Limpiar la BBDD de helado
      */
     public void limpiarBBDDHelado() {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarHelado");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureCall("pLimpiarHelado");
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
      * Limpiar la BBDD de ventaProducto
      */
-    public void limpiarBBDDVentaProducto() {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarVentaProducto");
+    public void limpiarBBDDVentaProducto(int idVenta) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureCall("pLimpiarVentaProducto");
+        query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
+        query.setParameter(1, idVenta);
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
      * Limpiar la BBDD de venta
      */
     public void limpiarBBDDVenta() {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pLimpiarVenta");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureCall("pLimpiarVenta");
         query.execute();
-        HibernateUtil.getCurrentSession().getTransaction().commit();
+        session.getTransaction().commit();
+        session.close();
     }
     /////////////////////////////////////////////////////////////////
 
 
     // EXISTE
+
     /***
      * Comprobar si existe un proveedor
      * @param nombreProveedor proveedor a buscar en la BBDD
      */
     public boolean proveedorExiste(String nombreProveedor) {
-        HibernateUtil.getCurrentSession().beginTransaction();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
         String hql = "SELECT count(p) FROM Proveedor p WHERE p.nombre = :nombre AND p.activo = true";
-        int count = HibernateUtil.getCurrentSession().createQuery(hql, Integer.class)
-                .setParameter("nombre", nombreProveedor)
-                .uniqueResult();
-        return count > 0;
+        Long count = session.createQuery(hql, Long.class).setParameter("nombre", nombreProveedor).uniqueResult();
+        session.getTransaction().commit();
+        return count != null && count > 0;
     }
 
     /***
@@ -311,12 +502,12 @@ public class Modelo {
      * @param emailEmpleado empleado a buscar en la BBDD
      */
     public boolean empleadoExiste(String emailEmpleado) {
-        HibernateUtil.getCurrentSession().beginTransaction();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
         String hql = "SELECT count(e) FROM Empleado e WHERE e.email = :email AND e.activo = true";
-        int count = HibernateUtil.getCurrentSession().createQuery(hql, Integer.class)
-                .setParameter("email", emailEmpleado)
-                .uniqueResult();
-        return count > 0;
+        Long count = session.createQuery(hql, Long.class).setParameter("email", emailEmpleado).uniqueResult();
+        session.getTransaction().commit();
+        return count != null && count > 0;
     }
 
     /***
@@ -324,12 +515,12 @@ public class Modelo {
      * @param emailCliente cliente a buscar en la BBDD
      */
     public boolean clienteExiste(String emailCliente) {
-        HibernateUtil.getCurrentSession().beginTransaction();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
         String hql = "SELECT count(c) FROM Cliente c WHERE c.email = :email AND c.activo = true";
-        int count = HibernateUtil.getCurrentSession().createQuery(hql, Integer.class)
-                .setParameter("email", emailCliente)
-                .uniqueResult();
-        return count > 0;
+        Long count = session.createQuery(hql, Long.class).setParameter("email", emailCliente).uniqueResult();
+        session.getTransaction().commit();
+        return count != null && count > 0;
     }
 
     /***
@@ -337,12 +528,12 @@ public class Modelo {
      * @param nombreProducto helado a buscar en la BBDD
      */
     public boolean heladoExiste(String nombreProducto) {
-        HibernateUtil.getCurrentSession().beginTransaction();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
         String hql = "SELECT count(h) FROM Helado h WHERE h.nombre = :nombre AND h.activo = true";
-        int count = HibernateUtil.getCurrentSession().createQuery(hql, Integer.class)
-                .setParameter("nombre", nombreProducto)
-                .uniqueResult();
-        return count > 0;
+        Long count = session.createQuery(hql, Long.class).setParameter("nombre", nombreProducto).uniqueResult();
+        session.getTransaction().commit();
+        return count != null && count > 0;
     }
     /////////////////////////////////////////////////////////////////
 
@@ -351,17 +542,25 @@ public class Modelo {
      * @param idVenta venta a modificar en la BBDD
      */
     public void generateVenta(int idVenta) {
-        StoredProcedureQuery query = HibernateUtil.getCurrentSession().createStoredProcedureCall("pGenerarVenta");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        StoredProcedureQuery query = session.createStoredProcedureCall("pGenerarVenta");
         query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
         query.setParameter(1, idVenta);
-        query.execute();
+        query.executeUpdate();
+        session.getTransaction().commit();
+        session.close();
     }
 
     /***
      * Generar venta a partir de su detalle en la BBDD
      * @return id de la última venta
      */
-    public int idUltimaVenta() {
-        return HibernateUtil.getCurrentSession().createQuery("SELECT MAX(id) FROM Venta", Integer.class).getSingleResult();
+    public Venta ultimaVenta() {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Venta venta = session.createQuery("FROM Venta ORDER BY id DESC", Venta.class).setMaxResults(1).uniqueResult();
+        session.getTransaction().commit();
+        return venta;
     }
 }

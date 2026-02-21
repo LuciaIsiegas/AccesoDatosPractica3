@@ -101,4 +101,9 @@ public class Empleado {
     public void setVentas(List<Venta> ventas) {
         this.ventas = ventas;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | Nombre: " + nombre + " | Apellidos: " + apellidos + " | Email: " + email + " | Telf: " + telefono + " | activo: " + activo;
+    }
 }

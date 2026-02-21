@@ -113,4 +113,9 @@ public class Proveedor {
     public void setHelados(List<Helado> helados) {
         this.helados = helados;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | Nombre: " + nombre + " | Contacto: " + personaContacto + " | Email: " + email + " | Telf: " + telefono + " | Dirección: " + direccion + " | Activo: " + activo;
+    }
 }

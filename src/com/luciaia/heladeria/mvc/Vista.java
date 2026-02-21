@@ -4,7 +4,6 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.luciaia.heladeria.base.enums.SaborHelado;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class Vista extends JFrame {
@@ -83,29 +82,34 @@ public class Vista extends JFrame {
     JButton btnBorrarBBDDVenta;
 
     // tablas
-    JTable tableProducto;
-    JTable tableEmpleado;
-    JTable tableCliente;
-    JTable tableProveedor;
-    JTable tableVenta;
-    JTable tableVentaEmpleado;
-    JTable tableVentaCliente;
-    JTable tableProductoProveedor;
-    JTable tableVentaProducto;
+    JList listHelado;
+    JList listCliente;
+    JList listVentaCliente;
+    JList listProveedor;
+    JList listEmpleado;
+    JList listVentaEmpleado;
+    JList listHeladosProveedor;
+    JList listVenta;
+    JList listLineasVenta;
 
-    DefaultTableModel dtmProducto;
-    DefaultTableModel dtmEmpleado;
-    DefaultTableModel dtmCliente;
-    DefaultTableModel dtmProveedor;
-    DefaultTableModel dtmVenta;
-    DefaultTableModel dtmVentaEmpleado;
-    DefaultTableModel dtmVentaCliente;
-    DefaultTableModel dtmProductoProveedor;
-    DefaultTableModel dtmVentaProducto;
+    DefaultListModel dlmProducto;
+    DefaultListModel dlmEmpleado;
+    DefaultListModel dlmCliente;
+    DefaultListModel dlmProveedor;
+    DefaultListModel dlmVenta;
+    DefaultListModel dlmVentaEmpleado;
+    DefaultListModel dlmVentaCliente;
+    DefaultListModel dlmProductoProveedor;
+    DefaultListModel dlmVentaProducto;
 
     //menubar
     JMenuItem itemDesconectar;
     JMenuItem itemSalir;
+
+    JButton btnMostrarVentasEmpleado;
+    JButton btnMostrarVentasCliente;
+    JButton btnMostrarHeladosProveedor;
+    JButton btnMostrarDetalle;
 
 
     public Vista() {
@@ -121,7 +125,7 @@ public class Vista extends JFrame {
         );
 
         setIconImage(icono);
-        radioHelado.setSelected(true);
+        //radioHelado.setSelected(true);
         crearPanelCard();
         botonesVisibles();
 
@@ -132,11 +136,10 @@ public class Vista extends JFrame {
         setMenu();
         //cargo enumerados
         setEnumComboBox();
-        //cargo table models
-        setTableModels();
         pack();
         setVisible(true);
         setLocationRelativeTo(null);
+        setListModels();
     }
 
     private void setMenu() {
@@ -165,70 +168,25 @@ public class Vista extends JFrame {
         panelHelado.comboSabor.setSelectedIndex(-1);
     }
 
-    private void setTableModels() {
-        dtmProducto = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableProducto.setModel(dtmProducto);
-        dtmEmpleado = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableEmpleado.setModel(dtmEmpleado);
-        dtmCliente = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableCliente.setModel(dtmCliente);
-        dtmProveedor = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableProveedor.setModel(dtmProveedor);
-        dtmVenta = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableVenta.setModel(dtmVenta);
-        dtmVentaEmpleado = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableVentaEmpleado.setModel(dtmVentaEmpleado);
-        dtmVentaCliente = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableVentaCliente.setModel(dtmVentaCliente);
-        dtmProductoProveedor = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableProductoProveedor.setModel(dtmProductoProveedor);
-        dtmVentaProducto = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableVentaProducto.setModel(dtmVentaProducto);
+    private void setListModels() {
+        dlmProducto = new DefaultListModel();
+        listHelado.setModel(dlmProducto);
+        dlmEmpleado = new DefaultListModel();
+        listEmpleado.setModel(dlmEmpleado);
+        dlmCliente = new DefaultListModel();
+        listCliente.setModel(dlmCliente);
+        dlmProveedor = new DefaultListModel();
+        listProveedor.setModel(dlmProveedor);
+        dlmVenta = new DefaultListModel();
+        listVenta.setModel(dlmVenta);
+        dlmVentaEmpleado = new DefaultListModel();
+        listVentaEmpleado.setModel(dlmVentaEmpleado);
+        dlmVentaCliente = new DefaultListModel();
+        listVentaCliente.setModel(dlmVentaCliente);
+        dlmProductoProveedor = new DefaultListModel();
+        listHeladosProveedor.setModel(dlmProductoProveedor);
+        dlmVentaProducto = new DefaultListModel();
+        listLineasVenta.setModel(dlmVentaProducto);
     }
 
     private void botonesVisibles() {

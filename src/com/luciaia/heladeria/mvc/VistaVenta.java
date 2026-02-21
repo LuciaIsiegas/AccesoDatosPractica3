@@ -1,7 +1,6 @@
 package com.luciaia.heladeria.mvc;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class VistaVenta extends JDialog {
@@ -19,9 +18,9 @@ public class VistaVenta extends JDialog {
     JButton btnEliminar;
     JButton btnBorrarBBDDVentaProducto;
 
-    // tablas
-    JTable tableVentaProducto;
-    DefaultTableModel dtmVentaProducto;
+    // tabla
+    JList listVentaProducto;
+    DefaultListModel dlmVentaProducto;
 
     public VistaVenta(Frame owner) {
         super(owner, "Venta-Producto", true);
@@ -53,13 +52,8 @@ public class VistaVenta extends JDialog {
     }
 
     private void setTableModel() {
-        dtmVentaProducto = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableVentaProducto.setModel(dtmVentaProducto);
+        dlmVentaProducto = new DefaultListModel() ;
+        listVentaProducto.setModel(dlmVentaProducto);
     }
 
 

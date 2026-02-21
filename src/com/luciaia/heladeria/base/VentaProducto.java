@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "venta_producto", schema = "heladeria_3", catalog = "")
+@Table(name = "venta_producto", schema = "heladeria_3")
 public class VentaProducto {
     private int id;
     private int cantidad;
@@ -75,5 +75,10 @@ public class VentaProducto {
 
     public void setVenta(Venta venta) {
         this.venta = venta;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | Cantidad: " + cantidad + " | Precio Total: " + precioTotal + " | Helado: '" + helado.getNombre() + "' | Venta: " + venta.getId();
     }
 }

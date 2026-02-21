@@ -101,4 +101,9 @@ public class Cliente {
     public void setCompras(List<Venta> compras) {
         this.compras = compras;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | Nombre: " + nombre + " | Apellidos: " + apellidos + " | Email: " + email + " | Telf: " + telefono + " | Activo: " + activo;
+    }
 }

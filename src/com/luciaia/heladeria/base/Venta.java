@@ -87,4 +87,9 @@ public class Venta {
     public void setLineasVenta(List<VentaProducto> lineasVenta) {
         this.lineasVenta = lineasVenta;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | Cantidad: " + cantidad + " | Precio Total: " + precioTotal + " | Empleado: " + empleado.getNombre() + " | Cliente: " + cliente.getNombre();
+    }
 }
