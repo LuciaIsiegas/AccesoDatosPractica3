@@ -14,7 +14,6 @@ public class Proveedor {
     private String telefono;
     private String direccion;
     private boolean activo;
-    private List<Gofre> gofres;
     private List<Helado> helados;
 
     @Id
@@ -104,15 +103,6 @@ public class Proveedor {
     @Override
     public int hashCode() {
         return Objects.hash(id, nombre, personaContacto, email, telefono, direccion, activo);
-    }
-
-    @OneToMany(mappedBy = "proveedor")
-    public List<Gofre> getGofres() {
-        return gofres;
-    }
-
-    public void setGofres(List<Gofre> gofres) {
-        this.gofres = gofres;
     }
 
     @OneToMany(mappedBy = "proveedor")

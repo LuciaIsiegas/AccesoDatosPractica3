@@ -2,8 +2,6 @@ package com.luciaia.heladeria.mvc;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.luciaia.heladeria.base.enums.SaborHelado;
-import com.luciaia.heladeria.base.enums.TipoMasa;
-import com.luciaia.heladeria.base.enums.Topping;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +15,6 @@ public class Vista extends JFrame {
     // productos
     JPanel JPanelProducto;
     JRadioButton radioHelado;
-    JRadioButton radioGofre;
     JButton btnLimpiarProducto;
     JButton btnCancelarProducto;
     JButton btnGuardarProducto;
@@ -27,7 +24,6 @@ public class Vista extends JFrame {
     JButton btnBorrarBBDDProducto;
     JPanel panelCard;
     PanelHelado panelHelado;
-    PanelGofre panelGofre;
     JTextField txtNombreProducto;
     JTextField txtPrecioProducto;
     DatePicker dateCaducidad;
@@ -85,19 +81,6 @@ public class Vista extends JFrame {
     JButton btnEditarVenta;
     JButton btnEliminarVenta;
     JButton btnBorrarBBDDVenta;
-
-    // Busqueda
-    JTextField txtBusquedaProducto;
-    JButton btnBuscarProducto;
-    JTextField txtBuscarEmpleado;
-    JButton btnBuscarEmpleado;
-    JTextField txtBuscarCliente;
-    JButton btnBuscarCliente;
-    JTextField txtBuscarProveedor;
-    JButton btnBuscarProveedor;
-    JButton btnBuscarVentaEmpleado;
-    JButton btnBuscarVentaCliente;
-    JButton btnRefrescarVenta;
 
     // tablas
     JTable tableProducto;
@@ -180,21 +163,6 @@ public class Vista extends JFrame {
             panelHelado.comboSabor.addItem(constant.getValor());
         }
         panelHelado.comboSabor.setSelectedIndex(-1);
-
-        for (TipoMasa constant : TipoMasa.values()) {
-            panelGofre.tipoMasaComboBox.addItem(constant.getValor());
-        }
-        panelGofre.tipoMasaComboBox.setSelectedIndex(-1);
-
-        for (Topping constant : Topping.values()) {
-            panelGofre.comboToppingGofre.addItem(constant.getValor());
-        }
-        panelGofre.comboToppingGofre.setSelectedIndex(-1);
-
-        for (TipoMasa constant : TipoMasa.values()) {
-            panelGofre.tipoMasaComboBox.addItem(constant.getValor());
-        }
-        panelGofre.tipoMasaComboBox.setSelectedIndex(-1);
     }
 
     private void setTableModels() {
@@ -278,10 +246,6 @@ public class Vista extends JFrame {
         panelHelado = new PanelHelado();
         panelHelado.conAzucarRadioButton.setSelected(true);
         panelCard.add(panelHelado.panel1, "Helado");
-
-        panelGofre = new PanelGofre();
-        panelGofre.conGlutenRadioButton.setSelected(true);
-        panelCard.add(panelGofre.panel1, "Gofre");
     }
 
     public void bloquearVista() {

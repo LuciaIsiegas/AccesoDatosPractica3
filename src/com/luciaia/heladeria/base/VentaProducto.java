@@ -9,7 +9,6 @@ public class VentaProducto {
     private int id;
     private int cantidad;
     private double precioTotal;
-    private Gofre gofre;
     private Helado helado;
     private Venta venta;
 
@@ -56,16 +55,6 @@ public class VentaProducto {
     @Override
     public int hashCode() {
         return Objects.hash(id, cantidad, precioTotal);
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "id_gofre", referencedColumnName = "id")
-    public Gofre getGofre() {
-        return gofre;
-    }
-
-    public void setGofre(Gofre gofre) {
-        this.gofre = gofre;
     }
 
     @ManyToOne

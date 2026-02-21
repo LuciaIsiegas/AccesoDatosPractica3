@@ -7,6 +7,11 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class HibernateUtil {
 
     private static SessionFactory sessionFactory;
@@ -24,7 +29,6 @@ public class HibernateUtil {
         // Se registran las clases que hay que mapear con cada tabla de la base de datos
         configuration.addAnnotatedClass(Cliente.class);
         configuration.addAnnotatedClass(Empleado.class);
-        configuration.addAnnotatedClass(Gofre.class);
         configuration.addAnnotatedClass(Helado.class);
         configuration.addAnnotatedClass(Proveedor.class);
         configuration.addAnnotatedClass(Venta.class);
@@ -63,4 +67,36 @@ public class HibernateUtil {
         if (sessionFactory != null)
             sessionFactory.close();
     }
+
+    /***
+     * Método leer fichero
+     */
+    private String leerFichero() throws IOException {
+        // LIA
+        System.out.println(
+                Thread.currentThread()
+                        .getContextClassLoader()
+                        .getResource("scriptBBDD-Heladeria.sql")
+        );
+
+        // Al utilizar Jar ya no existe como archivo físico, NO se puede utilizar FileReader
+        InputStream is = Thread.currentThread()
+                .getContextClassLoader()
+                .getResourceAsStream("scriptBBDD-Heladeria.sql");
+        if (is == null) {
+            throw new RuntimeException("No se encuentra el script SQL en resources");
+        }
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        //BufferedReader reader = new BufferedReader(new FileReader("scriptBBDD-Heladeria.sql"));
+        String linea;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((linea = reader.readLine()) != null) {
+            stringBuilder.append(linea);
+            stringBuilder.append(" ");
+        }
+        return stringBuilder.toString();
+    }
+
+
 }
