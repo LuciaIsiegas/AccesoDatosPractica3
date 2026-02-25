@@ -69,7 +69,7 @@ drop procedure if exists pEliminarProveedor;
 create procedure pEliminarProveedor(pid_proveedor int)
 begin
     if exists (select id from proveedor where id = pid_proveedor) then
-        if exists (select id from producto where id_proveedor = pid_proveedor) then
+        if exists (select id from helado where id_proveedor = pid_proveedor) then
             update proveedor
             set activo = false
             where id = pid_proveedor;
