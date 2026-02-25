@@ -86,13 +86,13 @@ public class Modelo {
         System.out.println(
                 Thread.currentThread()
                         .getContextClassLoader()
-                        .getResource("scriptBBDD_Heladeria3.sql")
+                        .getResource("scriptbbdd_Heladeria3.sql")
         );
 
         // Al utilizar Jar ya no existe como archivo físico, NO se puede utilizar FileReader
         InputStream is = Thread.currentThread()
                 .getContextClassLoader()
-                .getResourceAsStream("scriptBBDD_Heladeria3.sql");
+                .getResourceAsStream("scriptbbdd_Heladeria3.sql");
         if (is == null) {
             throw new RuntimeException("No se encuentra el script SQL en resources");
         }
